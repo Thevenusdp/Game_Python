@@ -14,7 +14,7 @@ class Ship:
         self.rect = self.image.get_rect()
 
         #Створювати кожен новий корабель внизу екрана, по центру
-        self.rect.midbottom = self.screen_rect.midbottom
+        self.rect.center = self.screen_rect.center
 
         #Зберегти десяткове значення для позиції корабля по горизонталі
         self.x = float(self.rect.x)
@@ -22,6 +22,9 @@ class Ship:
         #Індикатор руху
         self.moving_right = False
         self.moving_left = False
+        self.moving_up = False
+        self.moving_down = False
+
 
 
     def update(self):
@@ -32,6 +35,11 @@ class Ship:
            self.x += self.settings.ship_spead
         if self.moving_left and self.rect.left > 0:
             self.x -= self.settings.ship_spead
+        if self.moving_up and self.rect.top > 0:
+            self.rect.y -= 1
+        if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
+            self.rect.y += 1
+
 
 
         #оновити об'єкт rect з self.x

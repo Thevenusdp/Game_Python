@@ -1,9 +1,12 @@
 import sys
 import pygame
+from random import randint
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from stars import Stars
+from asteroid import Asteroid
 
 class AlienInvasion:
     """"Загальний клас, що керує ресурсами та поведінкою гри"""
@@ -17,7 +20,11 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.bullet = pygame.sprite.Group()
         self.alients = pygame.sprite.Group()
+        self.star = pygame.sprite.Group()
+        self.asteroid = pygame.sprite.Group()
         self._create_fleet()
+        self._create_stars()
+        self._create_asteroid()
 
 
     def run_game(self):
@@ -25,9 +32,25 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update()
+            self.ship.blitme()
             self.bullet.update()
             self._hide_bullet()
             self._update_sreeen()
+
+    def _create_stars(self):
+        how_many_stars = randint(50, 150)
+        for star in range(how_many_stars):
+            star = Stars(self)
+            star.rect.x = randint(1, 1000)
+            star.rect.y = randint(1, 1000)
+            self.star.add(star)
+
+    def _create_asteroid(self):
+        for asteroid in range(10):
+            asteroid = Asteroid(self)
+            asteroid.rect.x = randint(1, 1000)
+            asteroid.rect.y = randint(1, 1000)
+            self.star.add(asteroid)
 
 
     def _check_events(self):
@@ -42,6 +65,7 @@ class AlienInvasion:
                 self._cheak_keyup_events(event)
 
 
+
     def _cheak_keydonw_events(self, event):
         #Реагування на натиссненя клавіші
         if event.key == pygame.K_d:
@@ -52,7 +76,10 @@ class AlienInvasion:
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
-
+        elif event.key == pygame.K_s:
+            self.ship.moving_down = True
+        elif event.key == pygame.K_w:
+            self.ship.moving_up = True
 
     def _cheak_keyup_events(self, event):
         #реагування на натискання клавіші
@@ -60,6 +87,11 @@ class AlienInvasion:
             self.ship.moving_right = False
         elif event.key == pygame.K_a:
             self.ship.moving_left = False
+        elif event.key == pygame.K_s:
+            self.ship.moving_down = False
+        elif event.key == pygame.K_w:
+            self.ship.moving_up = False
+
 
     def _fire_bullet(self):
         """"Створити нову кулю"""
@@ -99,7 +131,7 @@ class AlienInvasion:
         alien_width, alien_hight = alien.rect.size
         alien.x = alien_width + 2 * alien_width * alien_number
         alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height +  2 *  alien.rect.height * row_number
+        alien.rect.y = alien.rect.height +    alien.rect.height * row_number
         self.alients.add(alien)
 
 
@@ -111,9 +143,12 @@ class AlienInvasion:
         for bullet in self.bullet.sprites():
             bullet.draw_bullet()
         self.alients.draw(self.screen)
+        self.star.draw(self.screen)
+        self.asteroid.draw(self.screen)
 
         # Показати останній намальований екран
         pygame.display.flip()
+
 
 
 
