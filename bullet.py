@@ -10,11 +10,9 @@ class Bullet(Sprite):
         self.screen = ai_game.screen
         self.settings = ai_game.settings
         self.color = self.settings.bullet_color
-
         #Створення rect кулі у (0, 0) та задати правbльну позицію
         self.rect = pygame.Rect(0, 0, self.settings.bullet_width, self.settings.bullet_height)
         self.rect.midtop = ai_game.ship.rect.midtop
-
         #Зберігати розицію кулі як десяткове значення
         self.y = float(self.rect.y)
 
@@ -22,7 +20,6 @@ class Bullet(Sprite):
         """"Посунути кулю нагору екраном"""
         #оновити десяткову позицію кулі
         self.y -= self.settings.bullet_speed
-
         #оновити позицію rect
         self.rect.y = self.y
 
